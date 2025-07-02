@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HR Dashboard</title>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>People Analytics Dashboard</h1>
+
+    <!-- Gender Chart -->
+    <p>This dashboard provides insights into employee demographics and satisfaction levels.</p>
+    <h2>Gender Distribution</h2>
+    <canvas id="genderChart" width="400" height="200"></canvas>
+
+    <script>
+        const stats = {{ gender_stats|safe }};
+
+        const genderLabels = stats.map(d => d.gender === 'M' ? 'Male' : 'Female');
+        const genderCounts = stats.map(d => d.count);
+
+        new Chart(document.getElementById('genderChart'), {
+            type: 'pie',
+            data: {
+                labels: genderLabels,
+                datasets: [{
+                    label: 'Employees by Gender',
+                    data: genderCounts,
+                    backgroundColor: ['#36A2EB', '#FF6384'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+<!-- File: analysis/views.py -->
+<!-- --- a/file:///c%3A/Users/kenny%20mongali/Desktop/Best/analysis/views.py -->
+<!-- +++ b/file:///c%3A/Users/kenny%20mongali/Desktop/Best/analysis/views.py -->
+<!-- @@ -1,4 +1,12 @@ -->

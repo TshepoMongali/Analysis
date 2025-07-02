@@ -1,6 +1,9 @@
-from django.urls import path
-from .views import HelloWorld
+# people/urls.py
+from rest_framework.routers import DefaultRouter
+from .views import EmployeeViewSet
 
-urlpatterns = [
-    path('', HelloWorld.as_view()),
-]
+router = DefaultRouter()
+router.register(r'employees', EmployeeViewSet)
+
+urlpatterns = router.urls
+# This will automatically create the necessary URL patterns for the EmployeeViewSet.
