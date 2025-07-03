@@ -10,7 +10,8 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   overflow-x: auto;
   padding: 0.5em;
   color: #333;
-  -webkit-text-size-adjust: none;
+  -webkit-text-size-adjust: 100%; /* For Safari and old WebKit */
+    text-size-adjust: 100%;
 }
 
 .hljs-comment,

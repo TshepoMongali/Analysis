@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        ul {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 0;
+            list-style: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        li {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<div class="employee-section">
+    <h1>Employee List</h1>
+    
+    <ol>
+        {% for employee in employees %}
+<li><a href="{% url 'dashboard' employee.id%}">{{ employee.first_name }} {{ employee.last_name }}</a>  </li>      {% empty %}
+            <li>No employees found.</li>
+        {% endfor %}
+    </ol>
+</div>
+
+</body>
+</html>

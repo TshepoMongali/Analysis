@@ -7,6 +7,7 @@ from .serializers import EmployeeSerializer
 from rest_framework import serializers
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+
 # analysis/views.py
 
 
@@ -83,6 +84,7 @@ def dashboard_view(request):
     
 
     context = {
+        'employee_count': Employee.objects.count(),
         'gender_stats': list(gender_stats),
         'department_stats': list(department_stats),
         'job_roles': list(job_roles),
@@ -98,4 +100,29 @@ def dashboard_view(request):
             {'month': 'May', 'score': 7.7}
         ]
     }
+    return render(request, 'dashboard.html', context)
+from django.shortcuts import render
+from .models import Employee
+
+def index_view(request):
+    employees = Employee.objects.all()
+    return render(request, 'index.html', {'employees': employees})
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Employee
+
+def index(request):
+    employees = Employee.objects.all()
+    return render(request, 'index.html', {'employees': employees})
+
+def dashboard(request, employee_id):
+    employee = get_object_or_404(Employee, id=employee_id)
+    
+    context = {
+        'employee': employee,
+        'gender': employee.get_gender_display(),
+        # Add more fields if needed
+    }
+    
     return render(request, 'dashboard.html', context)
