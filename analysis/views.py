@@ -1,6 +1,15 @@
 from django.db.models import Count, Avg
 from .models import Employee
 from django.shortcuts import render
+from datetime import date
+import json
+from .serializers import EmployeeSerializer
+from rest_framework import serializers
+from django.urls import path
+from rest_framework.routers import DefaultRouter
+# analysis/views.py
+
+
 
 # Create your views here.
 
@@ -13,12 +22,23 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     serializer_class = EmployeeSerializer
 
 def dashboard(request):
-    gender_stats = Employee.objects.values('gender').annotate(count=Count('id'))
-    dept_stats   = Employee.objects.values('department').annotate(count=Count('id'))
-    avg_tenure   = Employee.objects.aggregate(avg_years=Avg('tenure_years'))
+    employees = Employee.objects.all()
 
-    return render(request, 'people/dashboard.html',{
+    # Calculate gender stats
+    male = employees.filter(gender='Male').count()
+    female = employees.filter(gender='Female').count()
+    gender_stats = json.dumps({'Male': male, 'Female': female})
+
+    # Calculate tenure stats manually
+    today = date.today()
+    total_tenure = 0
+    for emp in employees:
+        tenure = today.year - emp.hire_date.year
+        total_tenure += tenure
+
+    avg_tenure = total_tenure / employees.count() if employees.exists() else 0
+
+    return render(request, 'dashboard.html', {
         'gender_stats': gender_stats,
-        'dept_stats': dept_stats,
-        'avg_tenure': avg_tenure,
+        'avg_tenure': round(avg_tenure, 2),
     })

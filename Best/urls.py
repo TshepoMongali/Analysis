@@ -1,6 +1,15 @@
 from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+from django.contrib import admin
+from analysis import views
+# Django REST Framework provides a powerful toolkit for building Web APIs.
+# We will create a simple API for the User model.
+# Serializers allow complex data types, such as querysets and model instances,
+# to be converted to native Python datatypes that can then be easily rendered into JSON or XML
+# or other content types. Similarly, parsed data can be converted back into complex types after validation.
+
+
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,5 +30,7 @@ router.register(r'users', UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('admin/', admin.site.urls),
+    path('', include('analysis.urls')), 
 ]
