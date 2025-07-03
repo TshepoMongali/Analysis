@@ -1,48 +1,184 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>HR Dashboard</title>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <h1>People Analytics Dashboard</h1>
 
-    <!-- Gender Chart -->
-    <p>This dashboard provides insights into employee demographics and satisfaction levels.</p>
-    <h2>Gender Distribution</h2>
-    <canvas id="genderChart" width="400" height="200"></canvas>
-
-    <script>
-        const stats = {{ gender_stats|safe }};
-
-        const genderLabels = stats.map(d => d.gender === 'M' ? 'Male' : 'Female');
-        const genderCounts = stats.map(d => d.count);
-
-        new Chart(document.getElementById('genderChart'), {
-            type: 'pie',
-            data: {
-                labels: genderLabels,
-                datasets: [{
-                    label: 'Employees by Gender',
-                    data: genderCounts,
-                    backgroundColor: ['#36A2EB', '#FF6384'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
-    </script>
-</body>
-</html>
 <!-- File: analysis/views.py -->
 <!-- --- a/file:///c%3A/Users/kenny%20mongali/Desktop/Best/analysis/views.py -->
 <!-- +++ b/file:///c%3A/Users/kenny%20mongali/Desktop/Best/analysis/views.py -->
 <!-- @@ -1,4 +1,12 @@ -->
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HR Dashboard</title>
+    
+
+      <!-- Google Fonts (Optional) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <h1>People Analytics Dashboard</h1>
+    <p style="text-align:center;">This dashboard provides insights into employee demographics and satisfaction levels.</p>
+
+    <!-- Gender Distribution -->
+    <div class="dashboard-section">
+        <h2>Gender Distribution</h2>
+        <canvas id="genderChart"></canvas>
+    </div>
+
+    <!-- Department Distribution -->
+    <div class="dashboard-section">
+        <h2>Employees per Department</h2>
+        <canvas id="departmentChart"></canvas>
+    </div>
+
+    <!-- Employee Satisfaction -->
+    <div class="dashboard-section">
+        <h2>Employee Satisfaction</h2>
+        <canvas id="satisfactionChart"></canvas>
+    </div>
+
+    <!-- Age Distribution -->
+    <div class="dashboard-section">
+        <h2>Age Distribution</h2>
+        <canvas id="ageChart"></canvas>
+    </div>
+
+        <!-- Leave Statistics -->
+    <div class="dashboard-section">
+        <h2>Leave Types</h2>
+        <canvas id="leaveChart"></canvas>
+    </div>
+
+    <!-- Job Roles -->
+    <div class="dashboard-section">
+        <h2>Job Roles</h2>
+        <canvas id="jobRoleChart"></canvas>
+    </div>
+
+    <!-- Tenure Groups -->
+    <div class="dashboard-section">
+        <h2>Tenure Groups</h2>
+        <canvas id="tenureChart"></canvas>
+    </div>
+
+    <!-- Work Location -->
+    <div class="dashboard-section">
+        <h2>Work Location</h2>
+        <canvas id="locationChart"></canvas>
+    </div>
+    <!-- Employee Count -->
+    <div class="dashboard-section">
+        <h2>Total Employees</h2>
+        <p id="employeeCount">{{ employee_count }}</p> 
+    </div>
+    <!-- Include Chart.js -->
+
+
+
+<script>
+    const genderStats = {{ gender_stats|safe }};
+    const departmentStats = {{ department_stats|safe }};
+    const roleStats = {{ job_roles|safe }};
+    const locationStats = {{ work_location_data|safe }};
+    const ageData = {{ age_data|safe }};
+    const tenureData = {{ tenure_data|safe }};
+    const satisfactionData = {{ satisfaction_data|safe }};
+
+    const extract = (data, key) => data.map(obj => obj[key]);
+
+    new Chart(document.getElementById('genderChart'), {
+        type: 'pie',
+        data: {
+            labels: extract(genderStats, 'gender'),
+            datasets: [{
+                label: 'Gender',
+                data: extract(genderStats, 'count'),
+                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('departmentChart'), {
+        type: 'bar',
+        data: {
+            labels: extract(departmentStats, 'department'),
+            datasets: [{
+                label: 'Employees',
+                data: extract(departmentStats, 'count'),
+                backgroundColor: '#4BC0C0'
+            }]
+        },
+        options: { indexAxis: 'y' }
+    });
+
+    new Chart(document.getElementById('roleChart'), {
+        type: 'bar',
+        data: {
+            labels: extract(roleStats, 'role'),
+            datasets: [{
+                label: 'Roles',
+                data: extract(roleStats, 'count'),
+                backgroundColor: '#9966FF'
+            }]
+        },
+        options: { indexAxis: 'y' }
+    });
+
+    new Chart(document.getElementById('locationChart'), {
+        type: 'doughnut',
+        data: {
+            labels: extract(locationStats, 'work_location'),
+            datasets: [{
+                label: 'Locations',
+                data: extract(locationStats, 'count'),
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('ageChart'), {
+        type: 'bar',
+        data: {
+            labels: extract(ageData, 'range'),
+            datasets: [{
+                label: 'Age Group',
+                data: extract(ageData, 'count'),
+                backgroundColor: '#FF9F40'
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('tenureChart'), {
+        type: 'bar',
+        data: {
+            labels: extract(tenureData, 'range'),
+            datasets: [{
+                label: 'Tenure',
+                data: extract(tenureData, 'count'),
+                backgroundColor: '#00A36C'
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('satisfactionChart'), {
+        type: 'line',
+        data: {
+            labels: extract(satisfactionData, 'month'),
+            datasets: [{
+                label: 'Satisfaction Score',
+                data: extract(satisfactionData, 'score'),
+                fill: false,
+                borderColor: '#FF6384',
+                tension: 0.3
+            }]
+        }
+    });
+</script>
+</body>
+</html>
