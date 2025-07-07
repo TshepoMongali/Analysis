@@ -17,7 +17,7 @@ A Django-based web app to visualize employee demographic data using interactive 
 ## Run Locally
 
 ```bash
-git clone https://github.com/TshepoMongali/people_analytics.git
+git clone https://github.com/TshepoMongali/Analysis.git
 cd people_analytics
 pip install -r requirements.txt
 python manage.py migrate
