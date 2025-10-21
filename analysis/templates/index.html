@@ -36,10 +36,23 @@
 <body>
 <div class="employee-section">
     <h1>Employee List</h1>
+    <div style="text-align:center; margin-bottom:20px;">
+        <a href="{% url 'add_employee' %}" style="display:inline-block; background:#007bff; color:white; padding:10px 16px; border-radius:6px; text-decoration:none;">Add Employee</a>
+    </div>
     
     <ol>
         {% for employee in employees %}
-<li><a href="{% url 'dashboard' employee.id%}">{{ employee.first_name }} {{ employee.last_name }}</a>  </li>      {% empty %}
+<li>
+                <a href="{% url 'dashboard' employee.id %}">{{ employee.first_name }} {{ employee.last_name }}</a>
+                {% if employee.is_fraud %}<span style="color: red; font-weight: bold;">⚠️</span>{% endif %}
+                <br>
+                <small style="color: #666;">
+                    Department: {{ employee.department }} |
+                    Salary: ${{ employee.salary|floatformat:2 }} |
+                    Location: {{ employee.get_work_location_display }}
+                </small>
+            </li>
+        {% empty %}
             <li>No employees found.</li>
         {% endfor %}
     </ol>

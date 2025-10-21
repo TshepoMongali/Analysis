@@ -67,6 +67,9 @@
     <div class="dashboard-section">
     <h1>Employee Info</h1>
     <h2>{{ employee.first_name }} {{ employee.last_name }}</h2>
+    {% if employee.is_fraud %}
+    <p style="color: red; font-weight: bold;">⚠️ This employee is flagged for fraud review</p>
+    {% endif %}
     <!-- Gender Distribution -->
     <div class="dashboard-section">
         <h2>Gender</h2>
@@ -113,15 +116,20 @@
         <canvas id="tenureChart"></canvas>
     </div>
 
+
     <!-- Work Location -->
     <div class="dashboard-section">
-        <h2>Work Location</h2>
-        <p><strong>Work Location:</strong> {{ employee.get_work_location_display }}</p>
-        <canvas id="locationChart"></canvas>
+    <h2>Work Location</h2>
+    <p><strong>Work Location:</strong> {{ employee.get_work_location_display }}</p>
+    <canvas id="locationChart"></canvas>
+    </div>
+
+    <!-- Salary Information -->
+    <div class="dashboard-section">
+        <h2>Salary</h2>
+        <p><strong>Current Salary:</strong> ${{ employee.salary|floatformat:2 }}</p>
     </div>
     <!-- Employee Count -->
-
-
     
     
     
